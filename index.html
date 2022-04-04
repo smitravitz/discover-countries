@@ -25,8 +25,12 @@
   <!-- Create the interactive map content with JavaScript (.js) -->
   <script>
 
+  // Montreal
   mtl_lat = 45.50;
   mtl_long = -73.57;
+  cgy_lat = 51.04;
+  cgy_long = -114.07;
+
 
   /* Set up the initial map center and zoom level */
   var map = L.map('map', {
@@ -37,16 +41,24 @@
   });
 
   /* display basemap tiles -- see others at https://leaflet-extras.github.io/leaflet-providers/preview/ */
+  arcTileLayer = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community' }
+
   L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://osm.org/copyright">\
-        OpenStreetMap</a> contributors, &copy;\
-        <a href="https://carto.com/attribution">CARTO</a>'
-  }).addTo(map);
+    arcTileLayer
+  ).addTo(map);
 
   /* Display a point marker with pop-up text */
   L.marker([mtl_lat, mtl_long]).addTo(map) // EDIT marker coordinates
   .bindPopup("Welcome to Montreal!"); // EDIT pop-up text message
+
+  L.marker([cgy_lat, cgy_long]).addTo(map) // EDIT marker coordinates
+  .on('click', onMarkerClick);
+
+  map.on('click', onMapClick)
+
+  function onMapClick(e) { alert("You clicked the map at " + e.latlng); }
+
+  function onMarkerClick(e) { alert(this.getLatLng()); }
 
   </script>
 </body>
