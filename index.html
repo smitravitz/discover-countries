@@ -11,13 +11,10 @@
     href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
     crossorigin=""/>
-  <link rel="stylesheet" type="text/css" href="css/index.css"/>
-
   <script
     src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-    crossorigin="">
-  </script>
+    crossorigin=""></script>
 
   <!-- Load Esri Leaflet from CDN -->
   <script src="https://unpkg.com/esri-leaflet@3.0.4/dist/esri-leaflet.js"></script>
@@ -25,40 +22,104 @@
   <!-- Load Esri Leaflet Geocoder from CDN -->
   <script src="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js"></script>
 
+  <link rel="stylesheet" type="text/css" href="css/index.css"/>
   <script type="text/javascript" src="js/index.js"></script>
 
 </head>
 <body>
 
-  <!-- Display the map and title with HTML division tags  -->
   <div id="map-title">Discover Countries!</div>
   <div id="map"></div>
 
-  <!-- Create the interactive map content with JavaScript (.js) -->
   <script>
+      /*
+      var allEnums = [
+        'ArcGIS:Imagery',
+        'ArcGIS:Imagery:Standard',
+        'ArcGIS:Imagery:Labels',
+        'ArcGIS:LightGray',
+        'ArcGIS:LightGray:Base',
+        'ArcGIS:LightGray:Labels',
+        'ArcGIS:DarkGray',
+        'ArcGIS:DarkGray:Base',
+        'ArcGIS:DarkGray:Labels',
+        'ArcGIS:Navigation',
+        'ArcGIS:NavigationNight',
+        'ArcGIS:Streets',
+        'ArcGIS:StreetsNight',
+        'ArcGIS:StreetsRelief',
+        'ArcGIS:StreetsRelief:Base',
+        'ArcGIS:Topographic',
+        'ArcGIS:Topographic:Base',
+        'ArcGIS:Oceans',
+        'ArcGIS:Oceans:Base',
+        'ArcGIS:Oceans:Labels',
+        'OSM:Standard',
+        'OSM:StandardRelief',
+        'OSM:StandardRelief:Base',
+        'OSM:Streets',
+        'OSM:StreetsRelief',
+        'OSM:StreetsRelief:Base',
+        'OSM:LightGray',
+        'OSM:LightGray:Base',
+        'OSM:LightGray:Labels',
+        'OSM:DarkGray',
+        'OSM-DarkGray:Base',
+        'OSM-DarkGray:Labels',
+        'ArcGIS:Terrain',
+        'ArcGIS:Terrain:Base',
+        'ArcGIS:Terrain:Detail',
+        'ArcGIS:Community',
+        'ArcGIS:ChartedTerritory',
+        'ArcGIS:ChartedTerritory:Base',
+        'ArcGIS:ColoredPencil',
+        'ArcGIS:Nova',
+        'ArcGIS:ModernAntique',
+        'ArcGIS:ModernAntique:Base',
+        'ArcGIS:Midcentury',
+        'ArcGIS:Newspaper',
+        'ArcGIS:Hillshade:Light',
+        'ArcGIS:Hillshade:Dark'
+      ];
+      */
+      const apiKey = "AAPKe3c3f3fdea554111a32a067f91eff31602N9-hUDjVj0k9Xsi7a_79o4QLEOWZ_DcDDgMHhtDwaazF5uWveM4QdeuTEC2V73";
+      const basemapEnum = "ArcGIS:LightGray";
 
-  const apiKey = "AAPKe3c3f3fdea554111a32a067f91eff31602N9-hUDjVj0k9Xsi7a_79o4QLEOWZ_DcDDgMHhtDwaazF5uWveM4QdeuTEC2V73";
-  const basemapEnum = "ArcGIS:Imagery:Standard";
+      var countriesStyle = {
+        "opacity": 0.4,
+        "fillOpacity": 0.1,
+        simplifyFactor: 20,
+        precision: 3
+      };
 
-  const map = L.map('map', {
-    center: [45.50, -73.57], // Montreal
-    minZoom: 2,
-    zoom: 12,  // 1 (zoomed out) to 18 (zoomed in)
-    scrollWheelZoom: true,
-  });
+      const basemapLayer = L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+          apiKey: apiKey
+      });
 
-  L.esri.Vector.vectorBasemapLayer(basemapEnum, {
-      apiKey: apiKey
-    }).addTo(map);
+      const countriesLayer = L.esri.featureLayer({
+          style: countriesStyle,
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Countries/FeatureServer/0"
+      });
 
-  const geocoder = L.esri.Geocoding.geocodeService({
-    apikey: apiKey
-  });
+      const map = L.map('map', {
+        center: [45.50, -73.57], // Montreal
+        maxZoom: 5,
+        minZoom: 4,
+        zoom: 12,  // 1 (zoomed out) to 18 (zoomed in)
+        scrollWheelZoom: true,
+        layers: [basemapLayer, countriesLayer]
+      });
 
-  const layerGroup = L.layerGroup().addTo(map);
+      const pointerLayerGroup = L.layerGroup().addTo(map);
 
-  var marker = L.marker([45.50, -73.57]).addTo(map);
-  map.on('click', revGeoLookup);
+      console.log(basemapLayer)
+      console.log(countriesLayer)
+
+      const geocoder = L.esri.Geocoding.geocodeService({
+        apikey: apiKey
+      });
+
+      map.on('click', revGeoLookup);
 
   </script>
 </body>

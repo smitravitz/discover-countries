@@ -6,14 +6,18 @@ function revGeoLookup(e) {
       if (error) {
         return;
       }
+      const c_code = result.address.CountryCode;
+      //call function to set c_code as active
 
+      const address = result.address.Match_addr;
       const lngLatString = `${Math.round(result.latlng.lng * 100000) / 100000}, ${Math.round(result.latlng.lat * 100000) / 100000}`;
 
-      layerGroup.clearLayers();
+      pointerLayerGroup.clearLayers();
       marker = L.marker(result.latlng)
-        .addTo(layerGroup)
-        .bindPopup(`<b>${lngLatString}</b><p>${result.address.Match_addr}</p>`)
+        .addTo(pointerLayerGroup)
+        .bindPopup(`<b>${lngLatString}</b><p>${c_code}</p></b><p>${address}</p>`)
         .openPopup();
+
     });
 };
 
